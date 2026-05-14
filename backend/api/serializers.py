@@ -1,5 +1,8 @@
+import fitparse
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import timedelta
 from .models import (
     Activity, Lap, HeartRateZone, Gear,
     Race, TrainingPlan, ProviderConnection
@@ -209,6 +212,33 @@ class ActivityCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         laps_data = validated_data.pop('laps', [])
         hr_zones_data = validated_data.pop('hr_zones', [])
+        raw_fit = validated_data.get('raw_fit_file')
+
+        if raw_fit:
+            try:
+                fit = fitparse.FitFile(raw_fit.file)
+                for sess in fit.get_messages('session'):
+                    d = sess.get_values()
+                    # Mapeo de datos básicos
+                    if d.get('start_time'): validated_data['start_time'] = d['start_time']
+                    if d.get('total_distance'): validated_data['distance'] = d['total_distance']
+                    if d.get('total_elapsed_time'): validated_data['elapsed_time'] = timedelta(seconds=d['total_elapsed_time'])
+                    if d.get('avg_heart_rate'): validated_data['avg_heart_rate'] = d['avg_heart_rate']
+                    if d.get('max_heart_rate'): validated_data['max_heart_rate'] = d['max_heart_rate']
+                    if d.get('total_calories'): validated_data['calories'] = d['total_calories']
+                    if d.get('total_ascent'): validated_data['total_ascent'] = d['total_ascent']
+                    if d.get('total_descent'): validated_data['total_descent'] = d['total_descent']
+                    
+                    # Datos específicos (JSON)
+                    spec = validated_data.get('sport_specific_data', {})
+                    if d.get('avg_cadence'): spec['cadence'] = d['avg_cadence']
+                    if d.get('avg_power'): spec['avg_power'] = d['avg_power']
+                    if d.get('total_strokes'): spec['strokes'] = d['total_strokes']
+                    if d.get('training_effect_aerobic'): validated_data['training_effect_aerobic'] = d['training_effect_aerobic']
+                    validated_data['sport_specific_data'] = spec
+                    validated_data['source'] = 'fit_import'
+                    break # Solo procesamos la primera sesión
+            except Exception as e: print(f"Error parseando FIT: {e}")
 
         activity = Activity.objects.create(**validated_data)
 

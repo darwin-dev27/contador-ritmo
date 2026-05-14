@@ -53,10 +53,11 @@ export const activityAPI = {
     return res.json();
   },
   create: async (data) => {
+    const isFormData = data instanceof FormData;
     const res = await fetch(`${API_URL}/activities/`, {
       method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(data)
+      headers: getHeaders(null, !isFormData),
+      body: isFormData ? data : JSON.stringify(data)
     });
     if (!res.ok) throw new Error('Falló al crear actividad');
     return res.json();

@@ -136,3 +136,4 @@ dist
 .pnp.*
 
 backend/.env
+__pycache__/
