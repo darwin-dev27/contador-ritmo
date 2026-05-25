@@ -200,9 +200,8 @@ class Activity(models.Model):
         TrainingPlan, on_delete=models.SET_NULL,
         null=True, blank=True, related_name='activities'
     )
-    gear = models.ForeignKey(
-        Gear, on_delete=models.SET_NULL,
-        null=True, blank=True, related_name='activities'
+    gear = models.ManyToManyField(
+        Gear, blank=True, related_name='activities'
     )
 
     # --- Metadatos ---

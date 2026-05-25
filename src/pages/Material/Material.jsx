@@ -135,7 +135,7 @@ export const Material = () => {
           <p className={styles.emptySubtitle}>
             Añade tus zapatillas de correr, bicicletas o neoprenos para realizar un seguimiento del desgaste acumulado en cada entrenamiento.
           </p>
-          <button className={styles.emptyButton} onClick={() => alert("El formulario para añadir material estará disponible en la Fase B.")}>
+          <button className={styles.emptyButton} onClick={() => setShowForm(true)}>
             <Plus size={20} />
             Registrar mi primer material
           </button>

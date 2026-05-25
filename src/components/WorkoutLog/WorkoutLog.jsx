@@ -22,7 +22,7 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
     strokes: '',
     fit_file: null,
     is_planned: false,
-    gear: ''
+    gear: []
   });
   const [loading, setLoading] = useState(false);
   const [gears, setGears] = useState([]);
@@ -68,7 +68,9 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
     payload.append('source', 'manual');
 
     fields.forEach(f => { if (formData[f]) payload.append(f === 'notes' ? 'description' : f, formData[f]); });
-    if (formData.gear) payload.append('gear', formData.gear);
+    if (formData.gear && formData.gear.length > 0) {
+      formData.gear.forEach(id => payload.append('gear', id));
+    }
     if (formData.fit_file) payload.append('raw_fit_file', formData.fit_file);
 
     const specific = {};
@@ -79,7 +81,7 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
 
     try {
       await activityAPI.create(payload);
-      setFormData({ ...formData, distance: '', notes: '', feeling: '', fit_file: null, is_planned: false, gear: '' });
+      setFormData({ ...formData, distance: '', notes: '', feeling: '', fit_file: null, is_planned: false, gear: [] });
       if (onWorkoutAdded) onWorkoutAdded();
     } catch (err) { alert("Error al guardar"); } finally { setLoading(false); }
   };
@@ -145,13 +147,35 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
         )}
 
         <div className="input-group">
-          <label>Equipamiento utilizado</label>
-          <select name="gear" value={formData.gear} onChange={handleChange}>
-            <option value="">Ninguno</option>
-            {gears.filter(g => g.active).map(g => (
-              <option key={g.id} value={g.id}>{g.name} ({g.brand} {g.model_name})</option>
-            ))}
-          </select>
+          <label>Equipamiento utilizado (puedes seleccionar varios)</label>
+          {gears.filter(g => g.active).length === 0 ? (
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontStyle: 'italic', margin: '0.5rem 0' }}>No tienes material deportivo registrado.</p>
+          ) : (
+            <div className={styles.gearPills}>
+              {gears.filter(g => g.active).map(g => {
+                const isSelected = formData.gear.includes(g.id.toString());
+                return (
+                  <button
+                    type="button"
+                    key={g.id}
+                    className={`${styles.gearPill} ${isSelected ? styles.selectedGear : ''}`}
+                    onClick={() => {
+                      setFormData(prev => {
+                        const currentGear = prev.gear ? [...prev.gear] : [];
+                        const idStr = g.id.toString();
+                        const nextGear = currentGear.includes(idStr)
+                          ? currentGear.filter(id => id !== idStr)
+                          : [...currentGear, idStr];
+                        return { ...prev, gear: nextGear };
+                      });
+                    }}
+                  >
+                    {g.name} ({g.brand})
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         <div className="input-group"><label>Notas</label><input type="text" name="notes" value={formData.notes} onChange={handleChange} /></div>

@@ -64,6 +64,15 @@ export const WorkoutList = ({ workouts, onWorkoutDeleted }) => {
                   Sensación: {w.feeling}/10
                 </div>
               )}
+
+              {w.gear_names && w.gear_names.length > 0 && (
+                <div className={styles.gearsContainer}>
+                  {w.gear_names.map((name, i) => (
+                    <span key={i} className={styles.gearBadge}>{name}</span>
+                  ))}
+                </div>
+              )}
+
               <p className={styles.metaText}>
                 {formatDate(w.start_time)} {w.description && `- "${w.description}"`}
               </p>

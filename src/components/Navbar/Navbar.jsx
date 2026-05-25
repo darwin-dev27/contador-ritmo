@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Activity, Dumbbell, LogOut, Calendar } from 'lucide-react';
+import { Activity, Dumbbell, LogOut, Calendar, Trophy } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import styles from './Navbar.module.css';
 
@@ -32,8 +32,14 @@ const Navbar = () => {
             <Dumbbell size={18} />
             Material
           </Link>
+
+          <Link to="/races" className={`${styles.navLink} ${isActive('/races') ? styles.active : ''}`}>
+            <Trophy size={18} />
+            Carreras
+          </Link>
         </div>
       )}
+
 
       {/* User Actions / Logout */}
       {user ? (

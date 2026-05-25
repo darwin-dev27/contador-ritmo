@@ -5,6 +5,7 @@ import { Diary } from './components/Diary/Diary.jsx';
 import { Login } from './pages/Login/Login.jsx';
 import { Register } from './pages/Register/Register.jsx';
 import { Material } from './pages/Material/Material.jsx';
+import { Races } from './pages/Races/Races.jsx';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute.jsx';
 import { AuthProvider } from './context/AuthContext';
 import styles from './App.module.css';
@@ -32,6 +33,13 @@ function App() {
                 <Material />
               </ProtectedRoute>
             } />
+
+            <Route path="/races" element={
+              <ProtectedRoute>
+                <Races />
+              </ProtectedRoute>
+            } />
+
             
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />

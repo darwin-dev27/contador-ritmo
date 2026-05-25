@@ -87,7 +87,7 @@ class ActivityViewSet(viewsets.ModelViewSet):
     ordering = ['-start_time']
 
     def get_queryset(self):
-        return Activity.objects.filter(user=self.request.user).select_related('gear', 'plan')
+        return Activity.objects.filter(user=self.request.user).select_related('plan').prefetch_related('gear')
 
     def get_serializer_class(self):
         if self.action == 'list':

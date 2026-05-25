@@ -119,3 +119,38 @@ export const gearAPI = {
   }
 };
 
+// API de Competiciones
+export const raceAPI = {
+  getAll: async () => {
+    const res = await fetch(`${API_URL}/races/`, { headers: getHeaders() });
+    if (!res.ok) throw new Error('Falló al obtener las competiciones');
+    return res.json();
+  },
+  create: async (data) => {
+    const res = await fetch(`${API_URL}/races/`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Falló al registrar la competición');
+    return res.json();
+  },
+  update: async (id, data) => {
+    const res = await fetch(`${API_URL}/races/${id}/`, {
+      method: 'PUT',
+      headers: getHeaders(),
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Falló al actualizar la competición');
+    return res.json();
+  },
+  delete: async (id) => {
+    const res = await fetch(`${API_URL}/races/${id}/`, {
+      method: 'DELETE',
+      headers: getHeaders()
+    });
+    if (!res.ok) throw new Error('Falló al eliminar la competición');
+  }
+};
+
+

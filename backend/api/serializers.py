@@ -122,7 +122,7 @@ class LapSerializer(serializers.ModelSerializer):
 class ActivityListSerializer(serializers.ModelSerializer):
     """Serializer ligero para listados de actividades."""
     pace_per_km = serializers.ReadOnlyField()
-    gear_name = serializers.CharField(source='gear.name', read_only=True, default=None)
+    gear_names = serializers.SerializerMethodField()
     elapsed_time_seconds = serializers.SerializerMethodField()
     moving_time_seconds = serializers.SerializerMethodField()
 
@@ -133,9 +133,12 @@ class ActivityListSerializer(serializers.ModelSerializer):
             'name', 'start_time', 'elapsed_time', 'elapsed_time_seconds',
             'moving_time', 'moving_time_seconds', 'distance',
             'avg_heart_rate', 'max_heart_rate', 'avg_speed',
-            'calories', 'feeling', 'pace_per_km', 'gear_name',
+            'calories', 'feeling', 'pace_per_km', 'gear_names',
             'completed', 'created_at'
         ]
+
+    def get_gear_names(self, obj):
+        return [g.name for g in obj.gear.all()]
 
     def get_elapsed_time_seconds(self, obj):
         if obj.elapsed_time:
@@ -153,7 +156,7 @@ class ActivityDetailSerializer(serializers.ModelSerializer):
     laps = LapSerializer(many=True, read_only=True)
     hr_zones = HeartRateZoneSerializer(many=True, read_only=True)
     pace_per_km = serializers.ReadOnlyField()
-    gear_name = serializers.CharField(source='gear.name', read_only=True, default=None)
+    gear_names = serializers.SerializerMethodField()
     plan_name = serializers.CharField(source='plan.name', read_only=True, default=None)
     elapsed_time_seconds = serializers.SerializerMethodField()
     moving_time_seconds = serializers.SerializerMethodField()
@@ -170,12 +173,15 @@ class ActivityDetailSerializer(serializers.ModelSerializer):
             'avg_speed', 'max_speed', 'calories',
             'feeling', 'training_effect_aerobic', 'training_effect_anaerobic',
             'sport_specific_data', 'raw_fit_file',
-            'plan', 'plan_name', 'gear', 'gear_name',
+            'plan', 'plan_name', 'gear', 'gear_names',
             'completed', 'pace_per_km',
             'laps', 'hr_zones',
             'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']
+
+    def get_gear_names(self, obj):
+        return [g.name for g in obj.gear.all()]
 
     def get_elapsed_time_seconds(self, obj):
         if obj.elapsed_time:
@@ -210,6 +216,7 @@ class ActivityCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
     def create(self, validated_data):
+        gear_data = validated_data.pop('gear', [])
         laps_data = validated_data.pop('laps', [])
         hr_zones_data = validated_data.pop('hr_zones', [])
         raw_fit = validated_data.get('raw_fit_file')
@@ -241,6 +248,7 @@ class ActivityCreateSerializer(serializers.ModelSerializer):
             except Exception as e: print(f"Error parseando FIT: {e}")
 
         activity = Activity.objects.create(**validated_data)
+        activity.gear.set(gear_data)
 
         for lap_data in laps_data:
             Lap.objects.create(activity=activity, **lap_data)
@@ -249,19 +257,20 @@ class ActivityCreateSerializer(serializers.ModelSerializer):
             HeartRateZone.objects.create(activity=activity, **zone_data)
 
         # Actualizar distancia del gear si se proporcionó
-        if activity.gear and activity.distance:
-            activity.gear.distance_logged += activity.distance
-            activity.gear.save()
+        if activity.distance:
+            for g in gear_data:
+                g.distance_logged += activity.distance
+                g.save()
 
         return activity
 
     def update(self, instance, validated_data):
+        gear_data = validated_data.pop('gear', None)
         laps_data = validated_data.pop('laps', None)
         hr_zones_data = validated_data.pop('hr_zones', None)
 
         # Guardar distancia anterior para actualizar gear
         old_distance = instance.distance or 0
-        old_gear = instance.gear
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
@@ -279,15 +288,25 @@ class ActivityCreateSerializer(serializers.ModelSerializer):
 
         # Actualizar gear distance
         new_distance = instance.distance or 0
-        if old_gear and old_gear != instance.gear:
-            old_gear.distance_logged -= old_distance
-            old_gear.save()
-        if instance.gear:
-            if old_gear == instance.gear:
-                instance.gear.distance_logged += (new_distance - old_distance)
-            else:
-                instance.gear.distance_logged += new_distance
-            instance.gear.save()
+        if gear_data is not None:
+            # 1. Restar distancia antigua del material que ya no está o se actualiza
+            for g in instance.gear.all():
+                g.distance_logged -= old_distance
+                g.save()
+
+            # 2. Asignar nuevo material
+            instance.gear.set(gear_data)
+
+            # 3. Sumar distancia nueva al material actual
+            for g in instance.gear.all():
+                g.distance_logged += new_distance
+                g.save()
+        else:
+            # Si no se modificó la relación de gear, pero cambió la distancia
+            if new_distance != old_distance:
+                for g in instance.gear.all():
+                    g.distance_logged += (new_distance - old_distance)
+                    g.save()
 
         return instance
 
