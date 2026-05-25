@@ -1,0 +1,15 @@
+.main {
+  position: relative;
+  min-height: 400px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.footer {
+  margin-top: 5rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  opacity: 0.8;
+}

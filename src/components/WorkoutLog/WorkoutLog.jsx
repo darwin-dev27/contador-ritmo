@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { activityAPI } from '../services/api';
+import { activityAPI, gearAPI } from '../../services/api';
 import { Save, CalendarClock } from 'lucide-react';
+import styles from './WorkoutLog.module.css';
 
 export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
   const [formData, setFormData] = useState({
@@ -20,9 +21,11 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
     avg_power: '',
     strokes: '',
     fit_file: null,
-    is_planned: false
+    is_planned: false,
+    gear: ''
   });
   const [loading, setLoading] = useState(false);
+  const [gears, setGears] = useState([]);
 
   const subSportOptions = {
     swim: [{ id: 'pool', name: 'Piscina' }, { id: 'open_water', name: 'Aguas abiertas' }],
@@ -34,6 +37,12 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
   useEffect(() => {
     if (selectedDate) setFormData(f => ({ ...f, date: selectedDate, is_planned: new Date(selectedDate) > new Date() }));
   }, [selectedDate]);
+
+  useEffect(() => {
+    gearAPI.getAll()
+      .then(res => setGears(res.results ? res.results : res))
+      .catch(console.error);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -57,8 +66,9 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
     payload.append('distance', meters);
     payload.append('completed', !formData.is_planned);
     payload.append('source', 'manual');
-    
+
     fields.forEach(f => { if (formData[f]) payload.append(f === 'notes' ? 'description' : f, formData[f]); });
+    if (formData.gear) payload.append('gear', formData.gear);
     if (formData.fit_file) payload.append('raw_fit_file', formData.fit_file);
 
     const specific = {};
@@ -69,7 +79,7 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
 
     try {
       await activityAPI.create(payload);
-      setFormData({ ...formData, distance: '', notes: '', feeling: '', fit_file: null, is_planned: false });
+      setFormData({ ...formData, distance: '', notes: '', feeling: '', fit_file: null, is_planned: false, gear: '' });
       if (onWorkoutAdded) onWorkoutAdded();
     } catch (err) { alert("Error al guardar"); } finally { setLoading(false); }
   };
@@ -77,46 +87,53 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
   const isKm = ['bike', 'run'].includes(formData.sport_type);
 
   return (
-    <div className="glass-panel animate-fade-in" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
-      <h2 style={{ marginBottom: '1.5rem', color: 'var(--primary)' }}>{formData.is_planned ? 'Planificar' : 'Registrar'} Actividad</h2>
+    <div className="glass-panel animate-fade-in">
+      <h2 className={styles.title}>{formData.is_planned ? 'Planificar' : 'Registrar'} Actividad</h2>
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1.5rem', padding: '0.8rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-          <input type="checkbox" id="is_planned" name="is_planned" checked={formData.is_planned} onChange={handleChange} style={{ width: '20px', height: '20px' }} />
-          <label htmlFor="is_planned" style={{ cursor: 'pointer' }}>Planificación futura</label>
+        <div className={styles.planningContainer}>
+          <input
+            type="checkbox"
+            id="is_planned"
+            name="is_planned"
+            checked={formData.is_planned}
+            onChange={handleChange}
+            className={styles.planningCheckbox}
+          />
+          <label htmlFor="is_planned" className={styles.planningLabel}>Planificación futura</label>
         </div>
 
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-          <div className="input-group" style={{ flex: 1 }}><label>Deporte</label>
+        <div className={styles.formRow}>
+          <div className={`input-group ${styles.inputGroupFlex}`}><label>Deporte</label>
             <select name="sport_type" value={formData.sport_type} onChange={handleChange}>
               <option value="swim">Natación</option><option value="bike">Ciclismo</option><option value="run">Carrera</option><option value="other">Otro</option>
             </select>
           </div>
-          <div className="input-group" style={{ flex: 1 }}><label>Tipo</label>
+          <div className={`input-group ${styles.inputGroupFlex}`}><label>Tipo</label>
             <select name="sub_sport" value={formData.sub_sport} onChange={handleChange}>
               {subSportOptions[formData.sport_type].map(opt => <option key={opt.id} value={opt.id}>{opt.name}</option>)}
             </select>
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <div className="input-group" style={{ flex: 1 }}><label>Fecha</label><input type="date" name="date" value={formData.date} onChange={handleChange} required /></div>
-          <div className="input-group" style={{ flex: 1 }}><label>Hora</label><input type="time" name="time" value={formData.time} onChange={handleChange} required /></div>
+        <div className={styles.formRow}>
+          <div className={`input-group ${styles.inputGroupFlex}`}><label>Fecha</label><input type="date" name="date" value={formData.date} onChange={handleChange} required /></div>
+          <div className={`input-group ${styles.inputGroupFlex}`}><label>Hora</label><input type="time" name="time" value={formData.time} onChange={handleChange} required /></div>
         </div>
 
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <div className="input-group" style={{ flex: 1 }}><label>Duración</label><input type="text" name="elapsed_time" value={formData.elapsed_time} onChange={handleChange} required /></div>
-          <div className="input-group" style={{ flex: 1 }}><label>Distancia {isKm ? '(km)' : '(m)'}</label><input type="number" step="0.01" name="distance" value={formData.distance} onChange={handleChange} required /></div>
+        <div className={styles.formRowNoMargin}>
+          <div className={`input-group ${styles.inputGroupFlex}`}><label>Duración</label><input type="text" name="elapsed_time" value={formData.elapsed_time} onChange={handleChange} required /></div>
+          <div className={`input-group ${styles.inputGroupFlex}`}><label>Distancia {isKm ? '(km)' : '(m)'}</label><input type="number" step="0.01" name="distance" value={formData.distance} onChange={handleChange} required /></div>
         </div>
 
         {!formData.is_planned && (
-          <div style={{ marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1rem' }}>
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-              <div className="input-group" style={{ flex: 1 }}><label>FC Media</label><input type="number" name="avg_heart_rate" value={formData.avg_heart_rate} onChange={handleChange} /></div>
-              <div className="input-group" style={{ flex: 1 }}><label>FC Máxima</label><input type="number" name="max_heart_rate" value={formData.max_heart_rate} onChange={handleChange} /></div>
+          <div className={styles.metricsSection}>
+            <div className={styles.formRow}>
+              <div className={`input-group ${styles.inputGroupFlex}`}><label>FC Media</label><input type="number" name="avg_heart_rate" value={formData.avg_heart_rate} onChange={handleChange} /></div>
+              <div className={`input-group ${styles.inputGroupFlex}`}><label>FC Máxima</label><input type="number" name="max_heart_rate" value={formData.max_heart_rate} onChange={handleChange} /></div>
             </div>
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-              <div className="input-group" style={{ flex: 1 }}><label>Desnivel +</label><input type="number" name="total_ascent" value={formData.total_ascent} onChange={handleChange} /></div>
-              <div className="input-group" style={{ flex: 1 }}><label>Calorías</label><input type="number" name="calories" value={formData.calories} onChange={handleChange} /></div>
+            <div className={styles.formRow}>
+              <div className={`input-group ${styles.inputGroupFlex}`}><label>Desnivel +</label><input type="number" name="total_ascent" value={formData.total_ascent} onChange={handleChange} /></div>
+              <div className={`input-group ${styles.inputGroupFlex}`}><label>Calorías</label><input type="number" name="calories" value={formData.calories} onChange={handleChange} /></div>
             </div>
             <div className="input-group">
               {formData.sport_type === 'run' && <><label>Cadencia</label><input type="number" name="cadence" value={formData.cadence} onChange={handleChange} /></>}
@@ -127,10 +144,20 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
           </div>
         )}
 
-        <div className="input-group"><label>Notas</label><input type="text" name="notes" value={formData.notes} onChange={handleChange} /></div>
-        <div className="input-group"><label>Archivo .FIT</label><input type="file" accept=".fit" onChange={(e) => setFormData({...formData, fit_file: e.target.files[0]})} style={{ fontSize: '0.8rem' }} /></div>
+        <div className="input-group">
+          <label>Equipamiento utilizado</label>
+          <select name="gear" value={formData.gear} onChange={handleChange}>
+            <option value="">Ninguno</option>
+            {gears.filter(g => g.active).map(g => (
+              <option key={g.id} value={g.id}>{g.name} ({g.brand} {g.model_name})</option>
+            ))}
+          </select>
+        </div>
 
-        <button type="submit" disabled={loading} style={{ width: '100%', marginTop: '1rem' }}>
+        <div className="input-group"><label>Notas</label><input type="text" name="notes" value={formData.notes} onChange={handleChange} /></div>
+        <div className="input-group"><label>Archivo .FIT</label><input type="file" accept=".fit" onChange={(e) => setFormData({ ...formData, fit_file: e.target.files[0] })} className={styles.fitInput} /></div>
+
+        <button type="submit" disabled={loading} className={styles.submitButton}>
           {formData.is_planned ? <CalendarClock size={20} /> : <Save size={20} />}
           {loading ? 'Guardando...' : (formData.is_planned ? 'Agendar' : 'Guardar')}
         </button>
@@ -139,4 +166,3 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
     </div>
   );
 };
-

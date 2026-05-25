@@ -85,3 +85,37 @@ export const activityAPI = {
   }
 };
 
+// API de Equipamiento / Material
+export const gearAPI = {
+  getAll: async () => {
+    const res = await fetch(`${API_URL}/gear/`, { headers: getHeaders() });
+    if (!res.ok) throw new Error('Falló al obtener el material deportivo');
+    return res.json();
+  },
+  create: async (data) => {
+    const res = await fetch(`${API_URL}/gear/`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Falló al registrar el material');
+    return res.json();
+  },
+  update: async (id, data) => {
+    const res = await fetch(`${API_URL}/gear/${id}/`, {
+      method: 'PUT',
+      headers: getHeaders(),
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Falló al actualizar el material');
+    return res.json();
+  },
+  delete: async (id) => {
+    const res = await fetch(`${API_URL}/gear/${id}/`, {
+      method: 'DELETE',
+      headers: getHeaders()
+    });
+    if (!res.ok) throw new Error('Falló al eliminar el material');
+  }
+};
+

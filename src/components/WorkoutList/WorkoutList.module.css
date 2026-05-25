@@ -1,0 +1,59 @@
+.emptyState {
+  text-align: center;
+  opacity: 0.7;
+}
+
+.listWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.workoutCard {
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.leftContent {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.iconWrapper {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.8rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  font-size: 1.1rem;
+  margin-bottom: 0.2rem;
+  text-transform: capitalize;
+}
+
+.feelingBadge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.1rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-right: 0.5rem;
+}
+
+.metaText {
+  margin: 0.3rem 0 0 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.deleteButton {
+  padding: 0.5rem;
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.2) !important;
+}

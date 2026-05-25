@@ -1,11 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import { Diary } from './components/Diary';
-import { Login } from './pages/Login';
-import { Register } from './pages/Register';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import Navbar from './components/Navbar/Navbar.jsx';
+import { Diary } from './components/Diary/Diary.jsx';
+import { Login } from './pages/Login/Login.jsx';
+import { Register } from './pages/Register/Register.jsx';
+import { Material } from './pages/Material/Material.jsx';
+import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute.jsx';
 import { AuthProvider } from './context/AuthContext';
+import styles from './App.module.css';
 
 function App() {
   return (
@@ -13,13 +15,7 @@ function App() {
       <Router>
         <Navbar />
         
-        <main style={{
-          position: 'relative',
-          minHeight: '400px',
-          maxWidth: '1200px',
-          margin: '0 auto',
-          width: '100%',
-        }}>
+        <main className={styles.main}>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -31,18 +27,18 @@ function App() {
               </ProtectedRoute>
             } />
             
+            <Route path="/material" element={
+              <ProtectedRoute>
+                <Material />
+              </ProtectedRoute>
+            } />
+            
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
 
-        <footer style={{
-          marginTop: '5rem',
-          textAlign: 'center',
-          color: 'var(--text-muted)',
-          fontSize: '0.875rem',
-          opacity: 0.8
-        }}>
+        <footer className={styles.footer}>
           <p>TriCalc Pro © {new Date().getFullYear()} - Rendimiento y Precisión. 🚀</p>
         </footer>
       </Router>

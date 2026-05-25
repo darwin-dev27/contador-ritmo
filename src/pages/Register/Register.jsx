@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { authAPI } from '../services/api';
+import { authAPI } from '../../services/api';
 import { Activity } from 'lucide-react';
+import styles from './Register.module.css';
 
 export const Register = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ export const Register = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,7 +24,7 @@ export const Register = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    
+
     try {
       await authAPI.register(formData.username, formData.email, formData.password);
       setSuccess(true);
@@ -38,24 +39,24 @@ export const Register = () => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-      <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '400px', padding: '3rem 2rem' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '2rem' }}>
-          <div style={{ background: 'var(--primary)', padding: '1rem', borderRadius: '50%', marginBottom: '1rem' }}>
+    <div className={styles.wrapper}>
+      <div className={`glass-panel animate-fade-in ${styles.panel}`}>
+        <div className={styles.header}>
+          <div className={styles.logoWrapper}>
             <Activity size={32} color="white" />
           </div>
-          <h2 style={{ color: 'white', textAlign: 'center' }}>Crear Cuenta</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.5rem' }}>Únete a TriCalc Pro</p>
+          <h2 className={styles.title}>Crear Cuenta</h2>
+          <p className={styles.subtitle}>Únete a TriCalc Pro</p>
         </div>
 
         {error && (
-          <div style={{ background: 'rgba(239, 68, 68, 0.2)', border: '1px solid #ef4444', color: '#fca5a5', padding: '0.75rem', borderRadius: '8px', marginBottom: '1.5rem', fontSize: '0.875rem', textAlign: 'center' }}>
+          <div className={styles.errorBox}>
             {error}
           </div>
         )}
 
         {success ? (
-          <div style={{ background: 'rgba(16, 185, 129, 0.2)', border: '1px solid #10b981', color: '#6ee7b7', padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
+          <div className={styles.successBox}>
             Cuenta creada con éxito. Redirigiendo al login...
           </div>
         ) : (
@@ -75,12 +76,12 @@ export const Register = () => {
               <input type="password" name="password" value={formData.password} onChange={handleChange} required placeholder="••••••••" />
             </div>
 
-            <button type="submit" disabled={loading} style={{ width: '100%', marginTop: '1rem', padding: '1rem' }}>
+            <button type="submit" disabled={loading} className={styles.submitButton}>
               {loading ? 'Procesando...' : 'Registrarme'}
             </button>
-            
-            <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-              ¿Ya tienes una cuenta? <Link to="/login" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 'bold' }}>Entra aquí</Link>
+
+            <p className={styles.redirectText}>
+              ¿Ya tienes una cuenta? <Link to="/login" className={styles.redirectLink}>Entra aquí</Link>
             </p>
           </form>
         )}

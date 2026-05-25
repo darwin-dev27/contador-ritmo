@@ -1,0 +1,53 @@
+.title {
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+}
+
+.planningContainer {
+  margin-bottom: 1.5rem;
+  padding: 0.8rem;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.planningCheckbox {
+  width: 20px;
+  height: 20px;
+}
+
+.planningLabel {
+  cursor: pointer;
+}
+
+.formRow {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.formRowNoMargin {
+  display: flex;
+  gap: 1rem;
+}
+
+.inputGroupFlex {
+  flex: 1;
+}
+
+.metricsSection {
+  margin-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 1rem;
+}
+
+.fitInput {
+  font-size: 0.8rem;
+}
+
+.submitButton {
+  width: 100%;
+  margin-top: 1rem;
+}
