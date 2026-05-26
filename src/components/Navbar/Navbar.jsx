@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Activity, Dumbbell, LogOut, Calendar, Trophy } from 'lucide-react';
+import { Activity, Dumbbell, LogOut, Calendar, Trophy, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import styles from './Navbar.module.css';
 
@@ -37,6 +37,11 @@ const Navbar = () => {
             <Trophy size={18} />
             Carreras
           </Link>
+
+          <Link to="/profile" className={`${styles.navLink} ${isActive('/profile') ? styles.active : ''}`}>
+            <User size={18} />
+            Perfil
+          </Link>
         </div>
       )}
 
@@ -44,9 +49,9 @@ const Navbar = () => {
       {/* User Actions / Logout */}
       {user ? (
         <div className={styles.userActions}>
-          <span className={styles.welcomeText}>
+          <Link to="/profile" className={styles.welcomeText} style={{ textDecoration: 'none', color: 'inherit' }}>
             Hola, <strong className={styles.username}>{user.username}</strong>
-          </span>
+          </Link>
           <button className={`secondary ${styles.logoutButton}`} onClick={logout}>
             <LogOut size={16} />
             Cerrar sesión

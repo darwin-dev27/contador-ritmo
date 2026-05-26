@@ -13,7 +13,7 @@ import django_filters
 
 from .models import (
     Activity, Lap, HeartRateZone, Gear,
-    Race, TrainingPlan, ProviderConnection
+    Race, TrainingPlan, ProviderConnection, UserProfile
 )
 from .serializers import (
     ActivityListSerializer, ActivityDetailSerializer, ActivityCreateSerializer,
@@ -61,15 +61,37 @@ class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        # Auto-crear perfil si no existe
+        UserProfile.objects.get_or_create(user=request.user)
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
     def put(self, request):
+        UserProfile.objects.get_or_create(user=request.user)
         serializer = UserSerializer(request.user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+
+        if not old_password or not new_password:
+            return Response({"error": "Se requieren la contraseña actual y la nueva contraseña."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not user.check_password(old_password):
+            return Response({"error": "La contraseña actual es incorrecta."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save()
+        return Response({"message": "Contraseña actualizada exitosamente."})
 
 
 # =============================================================================

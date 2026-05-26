@@ -421,3 +421,32 @@ class ProviderConnection(models.Model):
             return True
         from django.utils import timezone
         return timezone.now() >= self.token_expires_at
+
+
+# =============================================================================
+# USER PROFILE — Perfil deportivo del usuario
+# =============================================================================
+class UserProfile(models.Model):
+    LEVEL_CHOICES = [
+        ('beginner', 'Principiante'),
+        ('intermediate', 'Intermedio'),
+        ('advanced', 'Avanzado'),
+        ('elite', 'Élite'),
+    ]
+    MODALITY_CHOICES = [
+        ('sprint', 'Sprint'),
+        ('olympic', 'Olímpico'),
+        ('half', 'Half / 70.3'),
+        ('full', 'Full / Ironman'),
+        ('other', 'Otro'),
+    ]
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    avatar_url = models.URLField(max_length=500, blank=True, help_text="URL de la foto de perfil")
+    level = models.CharField(max_length=20, choices=LEVEL_CHOICES, default='intermediate')
+    main_goal = models.CharField(max_length=200, blank=True, help_text="Ej: Terminar mi primer Ironman")
+    triathlon_modality = models.CharField(max_length=20, choices=MODALITY_CHOICES, default='olympic')
+    weekly_workout_goal = models.IntegerField(default=4, help_text="Objetivo semanal de entrenamientos")
+
+    def __str__(self):
+        return f"Perfil de {self.user.username}"
+

@@ -6,6 +6,7 @@ import { Login } from './pages/Login/Login.jsx';
 import { Register } from './pages/Register/Register.jsx';
 import { Material } from './pages/Material/Material.jsx';
 import { Races } from './pages/Races/Races.jsx';
+import { Profile } from './pages/Profile/Profile.jsx';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute.jsx';
 import { AuthProvider } from './context/AuthContext';
 import styles from './App.module.css';
@@ -37,6 +38,12 @@ function App() {
             <Route path="/races" element={
               <ProtectedRoute>
                 <Races />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             } />
 

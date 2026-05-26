@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import (
 from .views import (
     ActivityViewSet, GearViewSet, RaceViewSet,
     TrainingPlanViewSet, ProviderConnectionViewSet,
-    RegisterView, UserProfileView,
+    RegisterView, UserProfileView, ChangePasswordView,
 )
 
 router = DefaultRouter()
@@ -30,4 +30,5 @@ urlpatterns = [
 
     # --- User profile ---
     path('auth/profile/', UserProfileView.as_view(), name='user-profile'),
+    path('auth/change-password/', ChangePasswordView.as_view(), name='change-password'),
 ]

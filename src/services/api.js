@@ -42,6 +42,27 @@ export const authAPI = {
     });
     if (!res.ok) throw new Error('Error al obtener perfil');
     return res.json();
+  },
+  updateProfile: async (data) => {
+    const res = await fetch(`${API_URL}/auth/profile/`, {
+      method: 'PUT',
+      headers: getHeaders(null, true),
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Error al actualizar el perfil');
+    return res.json();
+  },
+  changePassword: async (old_password, new_password) => {
+    const res = await fetch(`${API_URL}/auth/change-password/`, {
+      method: 'POST',
+      headers: getHeaders(null, true),
+      body: JSON.stringify({ old_password, new_password })
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data?.error || 'Error al cambiar la contraseña');
+    }
+    return res.json();
   }
 };
 
