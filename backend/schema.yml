@@ -1,0 +1,2484 @@
+openapi: 3.0.3
+info:
+  title: TriCalc Pro API — Contador de Ritmo
+  version: 1.0.0
+  description: Fachada REST API premium para gestionar entrenamientos deportivos,
+    material deportivo (Gear), calendario de competiciones (Races) y perfiles deportivos
+    de atletas.
+paths:
+  /api/activities/:
+    get:
+      operationId: activities_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - activities
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedActivityListList'
+          description: ''
+    post:
+      operationId: activities_create
+      tags:
+      - activities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ActivityCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ActivityCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityCreate'
+          description: ''
+  /api/activities/{id}/:
+    get:
+      operationId: activities_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - activities
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityDetail'
+          description: ''
+    put:
+      operationId: activities_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - activities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ActivityCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ActivityCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityCreate'
+          description: ''
+    patch:
+      operationId: activities_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - activities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedActivityCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedActivityCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedActivityCreate'
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityCreate'
+          description: ''
+    delete:
+      operationId: activities_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - activities
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/activities/{id}/hr-zones/:
+    get:
+      operationId: activities_hr_zones_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - activities
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityDetail'
+          description: ''
+  /api/activities/{id}/laps/:
+    get:
+      operationId: activities_laps_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - activities
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityDetail'
+          description: ''
+  /api/activities/stats/:
+    get:
+      operationId: activities_stats_retrieve
+      tags:
+      - activities
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityDetail'
+          description: ''
+  /api/activities/stats/monthly/:
+    get:
+      operationId: activities_stats_monthly_retrieve
+      tags:
+      - activities
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityDetail'
+          description: ''
+  /api/activities/stats/weekly/:
+    get:
+      operationId: activities_stats_weekly_retrieve
+      tags:
+      - activities
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityDetail'
+          description: ''
+  /api/auth/change-password/:
+    post:
+      operationId: auth_change_password_create
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/auth/profile/:
+    get:
+      operationId: auth_profile_retrieve
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: auth_profile_update
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/refresh/:
+    post:
+      operationId: auth_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/auth/register/:
+    post:
+      operationId: auth_register_create
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/auth/verify/:
+    post:
+      operationId: auth_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenVerify'
+          description: ''
+  /api/gear/:
+    get:
+      operationId: gear_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - gear
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedGearList'
+          description: ''
+    post:
+      operationId: gear_create
+      tags:
+      - gear
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Gear'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Gear'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Gear'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gear'
+          description: ''
+  /api/gear/{id}/:
+    get:
+      operationId: gear_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - gear
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gear'
+          description: ''
+    put:
+      operationId: gear_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - gear
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Gear'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Gear'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Gear'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gear'
+          description: ''
+    patch:
+      operationId: gear_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - gear
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGear'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGear'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGear'
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gear'
+          description: ''
+    delete:
+      operationId: gear_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - gear
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/plans/:
+    get:
+      operationId: plans_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - plans
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTrainingPlanList'
+          description: ''
+    post:
+      operationId: plans_create
+      tags:
+      - plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingPlan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TrainingPlan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TrainingPlan'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingPlan'
+          description: ''
+  /api/plans/{id}/:
+    get:
+      operationId: plans_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - plans
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingPlan'
+          description: ''
+    put:
+      operationId: plans_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingPlan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TrainingPlan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TrainingPlan'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingPlan'
+          description: ''
+    patch:
+      operationId: plans_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTrainingPlan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTrainingPlan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTrainingPlan'
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingPlan'
+          description: ''
+    delete:
+      operationId: plans_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - plans
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/plans/{id}/activities/:
+    get:
+      operationId: plans_activities_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - plans
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingPlan'
+          description: ''
+  /api/providers/:
+    get:
+      operationId: providers_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - providers
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProviderConnectionList'
+          description: ''
+    post:
+      operationId: providers_create
+      tags:
+      - providers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProviderConnectionCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProviderConnectionCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProviderConnectionCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderConnectionCreate'
+          description: ''
+  /api/providers/{id}/:
+    get:
+      operationId: providers_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - providers
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderConnection'
+          description: ''
+    put:
+      operationId: providers_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - providers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProviderConnectionCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProviderConnectionCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProviderConnectionCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderConnectionCreate'
+          description: ''
+    patch:
+      operationId: providers_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - providers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProviderConnectionCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProviderConnectionCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProviderConnectionCreate'
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderConnectionCreate'
+          description: ''
+    delete:
+      operationId: providers_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - providers
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/providers/{id}/disconnect/:
+    post:
+      operationId: providers_disconnect_create
+      description: Desconectar proveedor (desactiva sin borrar).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - providers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProviderConnection'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProviderConnection'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProviderConnection'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderConnection'
+          description: ''
+  /api/providers/{id}/sync/:
+    post:
+      operationId: providers_sync_create
+      description: Trigger manual sync con el proveedor (Suunto/Garmin).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - providers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProviderConnection'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProviderConnection'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProviderConnection'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderConnection'
+          description: ''
+  /api/races/:
+    get:
+      operationId: races_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - races
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRaceList'
+          description: ''
+    post:
+      operationId: races_create
+      tags:
+      - races
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Race'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Race'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Race'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Race'
+          description: ''
+  /api/races/{id}/:
+    get:
+      operationId: races_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - races
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Race'
+          description: ''
+    put:
+      operationId: races_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - races
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Race'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Race'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Race'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Race'
+          description: ''
+    patch:
+      operationId: races_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - races
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRace'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRace'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRace'
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Race'
+          description: ''
+    delete:
+      operationId: races_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - races
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    ActivityCreate:
+      type: object
+      description: Serializer para crear/actualizar actividades con laps y zonas HR.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        external_id:
+          type: string
+          nullable: true
+          description: ID externo de Suunto/Garmin para evitar duplicados
+          maxLength: 255
+        source:
+          $ref: '#/components/schemas/SourceEnum'
+        sport_type:
+          $ref: '#/components/schemas/SportTypeB52Enum'
+        sub_sport:
+          oneOf:
+          - $ref: '#/components/schemas/SubSportEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        name:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+          nullable: true
+        elapsed_time:
+          type: string
+          nullable: true
+          description: Tiempo total incluyendo pausas
+        moving_time:
+          type: string
+          nullable: true
+          description: Tiempo solo en movimiento
+        distance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Distancia en metros
+        total_ascent:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          nullable: true
+          description: Desnivel positivo en metros
+        total_descent:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          nullable: true
+          description: Desnivel negativo en metros
+        avg_heart_rate:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          description: FC media (bpm)
+        max_heart_rate:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          description: FC máxima (bpm)
+        min_heart_rate:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          description: FC mínima (bpm)
+        avg_speed:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,4})?$
+          nullable: true
+          description: Velocidad media en m/s
+        max_speed:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,4})?$
+          nullable: true
+          description: Velocidad máxima en m/s
+        calories:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        feeling:
+          type: integer
+          maximum: 10
+          minimum: 1
+          nullable: true
+          description: RPE subjetivo de 1 a 10
+        training_effect_aerobic:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,1})?$
+          nullable: true
+          description: Training Effect aeróbico (0.0 - 5.0)
+        training_effect_anaerobic:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,1})?$
+          nullable: true
+          description: Training Effect anaeróbico (0.0 - 5.0)
+        sport_specific_data:
+          description: 'Datos específicos: swim(strokes, swolf), bike(power, NP),
+            run(cadence, GCT)'
+        raw_fit_file:
+          type: string
+          format: uri
+          nullable: true
+          description: Archivo FIT original importado
+        plan:
+          type: integer
+          nullable: true
+        gear:
+          type: array
+          items:
+            type: integer
+        completed:
+          type: boolean
+        laps:
+          type: array
+          items:
+            $ref: '#/components/schemas/Lap'
+        hr_zones:
+          type: array
+          items:
+            $ref: '#/components/schemas/HeartRateZone'
+      required:
+      - id
+      - sport_type
+      - start_time
+    ActivityDetail:
+      type: object
+      description: Serializer completo con laps y zonas HR anidadas.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        external_id:
+          type: string
+          nullable: true
+          description: ID externo de Suunto/Garmin para evitar duplicados
+          maxLength: 255
+        source:
+          $ref: '#/components/schemas/SourceEnum'
+        sport_type:
+          $ref: '#/components/schemas/SportTypeB52Enum'
+        sub_sport:
+          oneOf:
+          - $ref: '#/components/schemas/SubSportEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        name:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+          nullable: true
+        elapsed_time:
+          type: string
+          nullable: true
+          description: Tiempo total incluyendo pausas
+        elapsed_time_seconds:
+          type: string
+          readOnly: true
+        moving_time:
+          type: string
+          nullable: true
+          description: Tiempo solo en movimiento
+        moving_time_seconds:
+          type: string
+          readOnly: true
+        distance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Distancia en metros
+        total_ascent:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          nullable: true
+          description: Desnivel positivo en metros
+        total_descent:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          nullable: true
+          description: Desnivel negativo en metros
+        avg_heart_rate:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          description: FC media (bpm)
+        max_heart_rate:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          description: FC máxima (bpm)
+        min_heart_rate:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          description: FC mínima (bpm)
+        avg_speed:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,4})?$
+          nullable: true
+          description: Velocidad media en m/s
+        max_speed:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,4})?$
+          nullable: true
+          description: Velocidad máxima en m/s
+        calories:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        feeling:
+          type: integer
+          maximum: 10
+          minimum: 1
+          nullable: true
+          description: RPE subjetivo de 1 a 10
+        training_effect_aerobic:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,1})?$
+          nullable: true
+          description: Training Effect aeróbico (0.0 - 5.0)
+        training_effect_anaerobic:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,1})?$
+          nullable: true
+          description: Training Effect anaeróbico (0.0 - 5.0)
+        sport_specific_data:
+          description: 'Datos específicos: swim(strokes, swolf), bike(power, NP),
+            run(cadence, GCT)'
+        raw_fit_file:
+          type: string
+          format: uri
+          nullable: true
+          description: Archivo FIT original importado
+        plan:
+          type: integer
+          nullable: true
+        plan_name:
+          type: string
+          readOnly: true
+        gear:
+          type: array
+          items:
+            type: integer
+        gear_names:
+          type: string
+          readOnly: true
+        completed:
+          type: boolean
+        pace_per_km:
+          type: string
+          readOnly: true
+        laps:
+          type: array
+          items:
+            $ref: '#/components/schemas/Lap'
+          readOnly: true
+        hr_zones:
+          type: array
+          items:
+            $ref: '#/components/schemas/HeartRateZone'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - elapsed_time_seconds
+      - gear_names
+      - hr_zones
+      - id
+      - laps
+      - moving_time_seconds
+      - pace_per_km
+      - plan_name
+      - sport_type
+      - start_time
+      - updated_at
+    ActivityList:
+      type: object
+      description: Serializer ligero para listados de actividades.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        external_id:
+          type: string
+          nullable: true
+          description: ID externo de Suunto/Garmin para evitar duplicados
+          maxLength: 255
+        source:
+          $ref: '#/components/schemas/SourceEnum'
+        sport_type:
+          $ref: '#/components/schemas/SportTypeB52Enum'
+        sub_sport:
+          oneOf:
+          - $ref: '#/components/schemas/SubSportEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        name:
+          type: string
+          maxLength: 200
+        start_time:
+          type: string
+          format: date-time
+        elapsed_time:
+          type: string
+          nullable: true
+          description: Tiempo total incluyendo pausas
+        elapsed_time_seconds:
+          type: string
+          readOnly: true
+        moving_time:
+          type: string
+          nullable: true
+          description: Tiempo solo en movimiento
+        moving_time_seconds:
+          type: string
+          readOnly: true
+        distance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Distancia en metros
+        avg_heart_rate:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          description: FC media (bpm)
+        max_heart_rate:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          description: FC máxima (bpm)
+        avg_speed:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,4})?$
+          nullable: true
+          description: Velocidad media en m/s
+        calories:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        feeling:
+          type: integer
+          maximum: 10
+          minimum: 1
+          nullable: true
+          description: RPE subjetivo de 1 a 10
+        pace_per_km:
+          type: string
+          readOnly: true
+        gear_names:
+          type: string
+          readOnly: true
+        completed:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - elapsed_time_seconds
+      - gear_names
+      - id
+      - moving_time_seconds
+      - pace_per_km
+      - sport_type
+      - start_time
+    BlankEnum:
+      enum:
+      - ''
+    Gear:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        gear_type:
+          $ref: '#/components/schemas/GearTypeEnum'
+        brand:
+          type: string
+          maxLength: 100
+        model_name:
+          type: string
+          maxLength: 100
+        distance_logged:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+          description: Distancia acumulada en metros
+        max_distance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Vida útil estimada en metros
+        active:
+          type: boolean
+        purchased_at:
+          type: string
+          format: date
+          nullable: true
+        notes:
+          type: string
+        usage_percentage:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - distance_logged
+      - gear_type
+      - id
+      - name
+      - usage_percentage
+    GearTypeEnum:
+      enum:
+      - shoes
+      - bike
+      - wetsuit
+      - goggles
+      - helmet
+      - other
+      type: string
+      description: |-
+        * `shoes` - Zapatillas
+        * `bike` - Bicicleta
+        * `wetsuit` - Neopreno
+        * `goggles` - Gafas de natación
+        * `helmet` - Casco
+        * `other` - Otro
+    HeartRateZone:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        zone_number:
+          type: integer
+          maximum: 6
+          minimum: 1
+          description: Número de zona (1-5 o 1-6)
+        zone_name:
+          type: string
+          description: 'Ej: Z1 Recovery, Z2 Endurance'
+          maxLength: 50
+        min_hr:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          description: FC mínima de la zona (bpm)
+        max_hr:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          description: FC máxima de la zona (bpm)
+        time_in_zone:
+          type: string
+          description: Tiempo en esta zona
+        time_in_zone_seconds:
+          type: string
+          readOnly: true
+      required:
+      - id
+      - max_hr
+      - min_hr
+      - time_in_zone
+      - time_in_zone_seconds
+      - zone_number
+    Lap:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        lap_index:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          description: Orden de la vuelta (empieza en 0)
+        sport_type:
+          description: |-
+            Deporte de esta vuelta (importante en multisport)
+
+            * `swim` - Natación
+            * `bike` - Ciclismo
+            * `run` - Carrera
+            * `transition` - Transición
+            * `multisport` - Multideporte
+            * `strength` - Fuerza
+            * `other` - Otro
+          oneOf:
+          - $ref: '#/components/schemas/SportTypeB52Enum'
+          - $ref: '#/components/schemas/BlankEnum'
+        start_time:
+          type: string
+          format: date-time
+          nullable: true
+        elapsed_time:
+          type: string
+          nullable: true
+        elapsed_time_seconds:
+          type: string
+          readOnly: true
+        distance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Distancia en metros
+        avg_heart_rate:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        max_heart_rate:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        avg_speed:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,4})?$
+          nullable: true
+        max_speed:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,4})?$
+          nullable: true
+        avg_cadence:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        avg_power:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        total_ascent:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          nullable: true
+        total_descent:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          nullable: true
+        calories:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        lap_trigger:
+          oneOf:
+          - $ref: '#/components/schemas/LapTriggerEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        sport_specific_data:
+          description: 'Datos específicos del lap: swim(stroke_count, swolf), bike(NP),
+            etc.'
+      required:
+      - elapsed_time_seconds
+      - id
+      - lap_index
+    LapTriggerEnum:
+      enum:
+      - manual
+      - distance
+      - time
+      - position_start
+      - session_end
+      - auto
+      type: string
+      description: |-
+        * `manual` - Manual
+        * `distance` - Distancia
+        * `time` - Tiempo
+        * `position_start` - Posición inicio
+        * `session_end` - Fin de sesión
+        * `auto` - Automático
+    PaginatedActivityListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActivityList'
+    PaginatedGearList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gear'
+    PaginatedProviderConnectionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderConnection'
+    PaginatedRaceList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Race'
+    PaginatedTrainingPlanList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrainingPlan'
+    PatchedActivityCreate:
+      type: object
+      description: Serializer para crear/actualizar actividades con laps y zonas HR.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        external_id:
+          type: string
+          nullable: true
+          description: ID externo de Suunto/Garmin para evitar duplicados
+          maxLength: 255
+        source:
+          $ref: '#/components/schemas/SourceEnum'
+        sport_type:
+          $ref: '#/components/schemas/SportTypeB52Enum'
+        sub_sport:
+          oneOf:
+          - $ref: '#/components/schemas/SubSportEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        name:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+          nullable: true
+        elapsed_time:
+          type: string
+          nullable: true
+          description: Tiempo total incluyendo pausas
+        moving_time:
+          type: string
+          nullable: true
+          description: Tiempo solo en movimiento
+        distance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Distancia en metros
+        total_ascent:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          nullable: true
+          description: Desnivel positivo en metros
+        total_descent:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          nullable: true
+          description: Desnivel negativo en metros
+        avg_heart_rate:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          description: FC media (bpm)
+        max_heart_rate:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          description: FC máxima (bpm)
+        min_heart_rate:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          description: FC mínima (bpm)
+        avg_speed:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,4})?$
+          nullable: true
+          description: Velocidad media en m/s
+        max_speed:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,4})?$
+          nullable: true
+          description: Velocidad máxima en m/s
+        calories:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        feeling:
+          type: integer
+          maximum: 10
+          minimum: 1
+          nullable: true
+          description: RPE subjetivo de 1 a 10
+        training_effect_aerobic:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,1})?$
+          nullable: true
+          description: Training Effect aeróbico (0.0 - 5.0)
+        training_effect_anaerobic:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,1})?$
+          nullable: true
+          description: Training Effect anaeróbico (0.0 - 5.0)
+        sport_specific_data:
+          description: 'Datos específicos: swim(strokes, swolf), bike(power, NP),
+            run(cadence, GCT)'
+        raw_fit_file:
+          type: string
+          format: uri
+          nullable: true
+          description: Archivo FIT original importado
+        plan:
+          type: integer
+          nullable: true
+        gear:
+          type: array
+          items:
+            type: integer
+        completed:
+          type: boolean
+        laps:
+          type: array
+          items:
+            $ref: '#/components/schemas/Lap'
+        hr_zones:
+          type: array
+          items:
+            $ref: '#/components/schemas/HeartRateZone'
+    PatchedGear:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        gear_type:
+          $ref: '#/components/schemas/GearTypeEnum'
+        brand:
+          type: string
+          maxLength: 100
+        model_name:
+          type: string
+          maxLength: 100
+        distance_logged:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+          description: Distancia acumulada en metros
+        max_distance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Vida útil estimada en metros
+        active:
+          type: boolean
+        purchased_at:
+          type: string
+          format: date
+          nullable: true
+        notes:
+          type: string
+        usage_percentage:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedProviderConnectionCreate:
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/ProviderEnum'
+        access_token:
+          type: string
+          description: Token de acceso OAuth (encriptar en producción)
+        refresh_token:
+          type: string
+          description: Refresh token OAuth
+        token_expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        token_scope:
+          type: string
+          maxLength: 500
+        provider_user_id:
+          type: string
+          description: ID del usuario en el proveedor (Suunto/Garmin)
+          maxLength: 255
+    PatchedRace:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        sport_type:
+          $ref: '#/components/schemas/RaceSportTypeEnum'
+        date:
+          type: string
+          format: date
+        season:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        location:
+          type: string
+          maxLength: 200
+        target_time:
+          type: string
+          nullable: true
+        target_position:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        result_time:
+          type: string
+          nullable: true
+        result_position:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        result_position_age_group:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        distance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Distancia total en metros
+        activity:
+          type: integer
+          nullable: true
+        activity_name:
+          type: string
+          readOnly: true
+        notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedTrainingPlan:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        goal:
+          type: string
+          description: 'Ej: Ironman Barcelona 2026'
+          maxLength: 200
+        activity_count:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    ProviderConnection:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        provider:
+          $ref: '#/components/schemas/ProviderEnum'
+        is_active:
+          type: boolean
+        last_sync:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        sync_errors:
+          type: integer
+          readOnly: true
+          description: Contador de errores consecutivos de sync
+        provider_user_id:
+          type: string
+          readOnly: true
+          description: ID del usuario en el proveedor (Suunto/Garmin)
+        provider_metadata:
+          readOnly: true
+          description: Datos adicionales del proveedor (nombre, email, etc.)
+        is_token_expired:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - is_token_expired
+      - last_sync
+      - provider
+      - provider_metadata
+      - provider_user_id
+      - sync_errors
+      - updated_at
+    ProviderConnectionCreate:
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/ProviderEnum'
+        access_token:
+          type: string
+          description: Token de acceso OAuth (encriptar en producción)
+        refresh_token:
+          type: string
+          description: Refresh token OAuth
+        token_expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        token_scope:
+          type: string
+          maxLength: 500
+        provider_user_id:
+          type: string
+          description: ID del usuario en el proveedor (Suunto/Garmin)
+          maxLength: 255
+      required:
+      - access_token
+      - provider
+    ProviderEnum:
+      enum:
+      - suunto
+      - garmin
+      type: string
+      description: |-
+        * `suunto` - Suunto
+        * `garmin` - Garmin
+    Race:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        sport_type:
+          $ref: '#/components/schemas/RaceSportTypeEnum'
+        date:
+          type: string
+          format: date
+        season:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        location:
+          type: string
+          maxLength: 200
+        target_time:
+          type: string
+          nullable: true
+        target_position:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        result_time:
+          type: string
+          nullable: true
+        result_position:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        result_position_age_group:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        distance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+          description: Distancia total en metros
+        activity:
+          type: integer
+          nullable: true
+        activity_name:
+          type: string
+          readOnly: true
+        notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - activity_name
+      - created_at
+      - date
+      - id
+      - name
+      - season
+      - updated_at
+    RaceSportTypeEnum:
+      enum:
+      - swim
+      - bike
+      - run
+      - triathlon_sprint
+      - triathlon_olympic
+      - triathlon_half
+      - triathlon_full
+      - duathlon
+      - other
+      type: string
+      description: |-
+        * `swim` - Natación
+        * `bike` - Ciclismo
+        * `run` - Carrera
+        * `triathlon_sprint` - Triatlón Sprint
+        * `triathlon_olympic` - Triatlón Olímpico
+        * `triathlon_half` - Medio Ironman (70.3)
+        * `triathlon_full` - Ironman
+        * `duathlon` - Duatlón
+        * `other` - Otro
+    SourceEnum:
+      enum:
+      - manual
+      - suunto
+      - garmin
+      - fit_import
+      type: string
+      description: |-
+        * `manual` - Manual
+        * `suunto` - Suunto
+        * `garmin` - Garmin
+        * `fit_import` - Importación FIT
+    SportTypeB52Enum:
+      enum:
+      - swim
+      - bike
+      - run
+      - transition
+      - multisport
+      - strength
+      - other
+      type: string
+      description: |-
+        * `swim` - Natación
+        * `bike` - Ciclismo
+        * `run` - Carrera
+        * `transition` - Transición
+        * `multisport` - Multideporte
+        * `strength` - Fuerza
+        * `other` - Otro
+    SubSportEnum:
+      enum:
+      - pool
+      - open_water
+      - road
+      - mtb
+      - gravel
+      - indoor_bike
+      - road_run
+      - trail
+      - track
+      - treadmill
+      - triathlon
+      - duathlon
+      - other
+      type: string
+      description: |-
+        * `pool` - Piscina
+        * `open_water` - Aguas abiertas
+        * `road` - Carretera
+        * `mtb` - Mountain Bike
+        * `gravel` - Gravel
+        * `indoor_bike` - Rodillo / Indoor
+        * `road_run` - Carrera en carretera
+        * `trail` - Trail
+        * `track` - Pista
+        * `treadmill` - Cinta de correr
+        * `triathlon` - Triatlón
+        * `duathlon` - Duatlón
+        * `other` - Otro
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+      required:
+      - token
+    TrainingPlan:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        goal:
+          type: string
+          description: 'Ej: Ironman Barcelona 2026'
+          maxLength: 200
+        activity_count:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - activity_count
+      - created_at
+      - end_date
+      - id
+      - name
+      - start_date
+      - updated_at
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
