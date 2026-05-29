@@ -137,3 +137,12 @@ dist
 
 backend/.env
 __pycache__/
+
+# Database
+backend/db.sqlite3
+*.sqlite3
+
+# Python/Django
+*.pyc
+**/__pycache__/
+django.log
