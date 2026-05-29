@@ -81,3 +81,219 @@
   background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
+
+/* Onboarding Banner */
+.onboardingBanner {
+  background: rgba(14, 165, 233, 0.08);
+  border: 1px solid rgba(14, 165, 233, 0.25);
+  border-left: 4px solid var(--primary);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.25rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.onboardingContent {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.onboardingIconContainer {
+  background: rgba(14, 165, 233, 0.15);
+  border-radius: 50%;
+  padding: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.onboardingText {
+  color: var(--text-main);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.onboardingHighlight {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+}
+
+/* Modal de Detalle de Entrenamiento */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.modalContent {
+  width: 90%;
+  max-width: 550px;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  padding: 2rem;
+  position: relative;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(16px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.modalTitleArea {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.modalTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.modalBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  background: var(--primary);
+  color: #fff;
+}
+
+.modalCloseX {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modalCloseX:hover {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.modalGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.modalCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+}
+
+.modalCardLabel {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.modalCardValue {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.modalSection {
+  margin-bottom: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.modalSectionTitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.5px;
+}
+
+.modalText {
+  color: var(--text-main);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.modalFooterButton {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+

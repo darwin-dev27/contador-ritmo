@@ -8,7 +8,7 @@ import { es } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from './TrainingCalendar.module.css';
 
-export const TrainingCalendar = ({ workouts, onDayClick }) => {
+export const TrainingCalendar = ({ workouts, onDayClick, onWorkoutClick }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewState, setViewState] = useState('weekly'); // 'weekly' or 'monthly'
 
@@ -102,9 +102,17 @@ export const TrainingCalendar = ({ workouts, onDayClick }) => {
               {/* LISTA DE ACTIVIDADES EN EL DÍA */}
               <div className={styles.activitiesContainer}>
                 {dayWorkouts.map(w => (
-                  <div key={w.id} className={`${styles.activityItem} ${
-                    w.completed ? styles.completed : styles.planned
-                  } ${getSportClass(w.sport_type)}`}>
+                  <div 
+                    key={w.id} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onWorkoutClick && onWorkoutClick(w);
+                    }}
+                    style={{ cursor: 'pointer' }}
+                    className={`${styles.activityItem} ${
+                      w.completed ? styles.completed : styles.planned
+                    } ${getSportClass(w.sport_type)}`}
+                  >
                     <strong className={styles.activityTitle}>
                       {w.sport_type} {w.completed ? '' : '(Plan)'}
                     </strong>

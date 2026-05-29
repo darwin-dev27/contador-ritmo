@@ -3,7 +3,7 @@ import { Waves, Bike, Footprints, Trash2, Activity as ActivityIcon } from 'lucid
 import { activityAPI } from '../../services/api';
 import styles from './WorkoutList.module.css';
 
-export const WorkoutList = ({ workouts, onWorkoutDeleted }) => {
+export const WorkoutList = ({ workouts, onWorkoutDeleted, onWorkoutClick }) => {
   const getIcon = (type) => {
     switch (type?.toLowerCase()) {
       case 'swim': return <Waves size={24} color="var(--accent-swim)" />;
@@ -49,7 +49,12 @@ export const WorkoutList = ({ workouts, onWorkoutDeleted }) => {
   return (
     <div className={styles.listWrapper}>
       {workouts.map(w => (
-        <div key={w.id} className={`glass-panel animate-fade-in ${styles.workoutCard}`}>
+        <div 
+          key={w.id} 
+          className={`glass-panel animate-fade-in ${styles.workoutCard}`}
+          onClick={() => onWorkoutClick && onWorkoutClick(w)}
+          style={{ cursor: 'pointer' }}
+        >
           <div className={styles.leftContent}>
             <div className={styles.iconWrapper}>
               {getIcon(w.sport_type)}
@@ -79,7 +84,7 @@ export const WorkoutList = ({ workouts, onWorkoutDeleted }) => {
             </div>
           </div>
 
-          <button className={`secondary ${styles.deleteButton}`} onClick={() => handleDelete(w.id)}>
+          <button className={`secondary ${styles.deleteButton}`} onClick={(e) => { e.stopPropagation(); handleDelete(w.id); }}>
             <Trash2 size={18} />
           </button>
         </div>

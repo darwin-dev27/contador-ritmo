@@ -1,0 +1,273 @@
+.container {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+/* Hero Section */
+.hero {
+  position: relative;
+  height: 90vh;
+  min-height: 600px;
+  background-image: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.95)), url('/hero.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 1.5rem;
+}
+
+.heroContent {
+  max-width: 800px;
+}
+
+.heroTitle {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.heroHighlight {
+  background: linear-gradient(135deg, var(--primary), #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.btnGroup {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ctaBtn {
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 30px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ctaBtn:hover {
+  transform: translateY(-2px);
+}
+
+/* Section Common */
+.section {
+  padding: 6rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sectionTitle {
+  font-size: 2.25rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.sectionSubtitle {
+  text-align: center;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto 4rem auto;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Sport Cards */
+.sportGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.sportCard {
+  padding: 2.5rem 2rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sportCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.sportIconWrapper {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.sportName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.sportDesc {
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* Benefits Section */
+.benefitsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.benefitCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: background 0.2s ease;
+}
+
+.benefitCard:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.benefitTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+}
+
+.benefitDesc {
+  color: var(--text-muted);
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+/* Dashboard Preview */
+.previewWrapper {
+  background: radial-gradient(circle at 10% 20%, rgba(14, 165, 233, 0.1) 0%, transparent 60%);
+  border-radius: 24px;
+  padding: 3rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mockDashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.mockWidget {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.mockWidgetTitle {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.mockWidgetVal {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* How It Works */
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+}
+
+.stepCard {
+  text-align: center;
+  position: relative;
+}
+
+.stepNum {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--primary), #10b981);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 auto 1.5rem auto;
+  box-shadow: 0 0 15px rgba(14, 165, 233, 0.3);
+}
+
+.stepTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.stepDesc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Final CTA */
+.finalCta {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%);
+  border-radius: 24px;
+  text-align: center;
+  padding: 5rem 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  max-width: 900px;
+  margin: 0 auto 6rem auto;
+}
+
+.finalCtaTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.finalCtaDesc {
+  color: var(--text-muted);
+  max-width: 500px;
+  margin: 0 auto 2.5rem auto;
+  font-size: 1.1rem;
+}
+
+/* Animations & Responsiveness */
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+  
+  .section {
+    padding: 4rem 1.25rem;
+  }
+}

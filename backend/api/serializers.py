@@ -260,6 +260,30 @@ class ActivityCreateSerializer(serializers.ModelSerializer):
                     if d.get('total_ascent'): validated_data['total_ascent'] = d['total_ascent']
                     if d.get('total_descent'): validated_data['total_descent'] = d['total_descent']
                     
+                    # Extraer y mapear el deporte de forma automática desde el archivo .FIT
+                    if d.get('sport'):
+                        fit_sport = str(d.get('sport')).lower()
+                        if 'run' in fit_sport:
+                            validated_data['sport_type'] = 'run'
+                        elif 'cycle' in fit_sport or 'bike' in fit_sport:
+                            validated_data['sport_type'] = 'bike'
+                        elif 'swim' in fit_sport:
+                            validated_data['sport_type'] = 'swim'
+
+                    # Extraer y mapear el subdeporte (ej: trail, carretera, rodillo, cinta, piscina)
+                    if d.get('sub_sport'):
+                        fit_sub = str(d.get('sub_sport')).lower()
+                        if 'trail' in fit_sub:
+                            validated_data['sub_sport'] = 'trail'
+                        elif 'road' in fit_sub:
+                            validated_data['sub_sport'] = 'road_run' if validated_data.get('sport_type') == 'run' else 'road'
+                        elif 'indoor' in fit_sub or 'stationary' in fit_sub:
+                            validated_data['sub_sport'] = 'indoor_bike' if validated_data.get('sport_type') == 'bike' else 'treadmill'
+                        elif 'open_water' in fit_sub:
+                            validated_data['sub_sport'] = 'open_water'
+                        elif 'pool' in fit_sub:
+                            validated_data['sub_sport'] = 'pool'
+
                     # Datos específicos (JSON)
                     spec = validated_data.get('sport_specific_data', {})
                     if d.get('avg_cadence'): spec['cadence'] = d['avg_cadence']

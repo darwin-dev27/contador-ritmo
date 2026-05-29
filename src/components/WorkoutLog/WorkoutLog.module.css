@@ -84,3 +84,66 @@
   box-shadow: 0 0 10px rgba(var(--primary-rgb, 14, 165, 233), 0.2);
 }
 
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.cancelButton {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 10px;
+  font-weight: 600;
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  margin-top: 1rem;
+}
+
+
+/* Zona de arrastrar y soltar .FIT */
+.dropzone {
+  border: 2px dashed rgba(14, 165, 233, 0.3);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.dropzone:hover, .dragActive {
+  background: rgba(14, 165, 233, 0.05);
+  border-color: var(--primary);
+  box-shadow: 0 0 12px rgba(14, 165, 233, 0.15);
+}
+
+.hasFile {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.04);
+  border-style: solid;
+}
+
+.dropzoneContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+}
+
+.dropzoneText {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.fileName {
+  font-size: 0.75rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+}
+
+

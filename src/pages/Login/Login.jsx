@@ -20,8 +20,8 @@ export const Login = () => {
 
     try {
       await login(username, password);
-      // Tras el login exitoso, redirigimos al diario (raíz)
-      navigate('/');
+      // Tras el login exitoso, redirigimos al diario
+      navigate('/diary');
     } catch (err) {
       setError('Credenciales incorrectas. Verifica tu usuario y contraseña.');
     } finally {

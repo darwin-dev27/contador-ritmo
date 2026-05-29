@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { activityAPI, gearAPI } from '../../services/api';
-import { Save, CalendarClock } from 'lucide-react';
+import { Save, CalendarClock, UploadCloud, Sparkles } from 'lucide-react';
 import styles from './WorkoutLog.module.css';
 
-export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
+export const WorkoutLog = ({ onWorkoutAdded, selectedDate, editWorkout, onClearEdit }) => {
   const [formData, setFormData] = useState({
     sport_type: 'swim',
     sub_sport: 'pool',
@@ -26,6 +26,26 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
   });
   const [loading, setLoading] = useState(false);
   const [gears, setGears] = useState([]);
+  const [dragActive, setDragActive] = useState(false);
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setFormData(prev => ({ ...prev, fit_file: e.dataTransfer.files[0] }));
+    }
+  };
 
   const subSportOptions = {
     swim: [{ id: 'pool', name: 'Piscina' }, { id: 'open_water', name: 'Aguas abiertas' }],
@@ -35,8 +55,54 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
   };
 
   useEffect(() => {
-    if (selectedDate) setFormData(f => ({ ...f, date: selectedDate, is_planned: new Date(selectedDate) > new Date() }));
-  }, [selectedDate]);
+    if (editWorkout) {
+      const d = new Date(editWorkout.start_time);
+      const dateStr = d.toISOString().split('T')[0];
+      const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+
+      setFormData({
+        sport_type: editWorkout.sport_type || 'swim',
+        sub_sport: editWorkout.sub_sport || 'pool',
+        date: dateStr,
+        time: timeStr,
+        elapsed_time: editWorkout.elapsed_time || '01:00:00',
+        distance: editWorkout.distance ? (['bike', 'run'].includes(editWorkout.sport_type) ? (editWorkout.distance / 1000).toFixed(2) : editWorkout.distance) : '',
+        feeling: editWorkout.feeling || '',
+        notes: editWorkout.description || '',
+        avg_heart_rate: editWorkout.avg_heart_rate || '',
+        max_heart_rate: editWorkout.max_heart_rate || '',
+        total_ascent: editWorkout.total_ascent || '',
+        calories: editWorkout.calories || '',
+        cadence: editWorkout.sport_specific_data?.cadence || '',
+        avg_power: editWorkout.sport_specific_data?.avg_power || '',
+        strokes: editWorkout.sport_specific_data?.strokes || '',
+        fit_file: null,
+        is_planned: !editWorkout.completed,
+        gear: editWorkout.gear ? editWorkout.gear.map(id => id.toString()) : []
+      });
+    } else {
+      setFormData({
+        sport_type: 'swim',
+        sub_sport: 'pool',
+        date: selectedDate || new Date().toISOString().split('T')[0],
+        time: '12:00',
+        elapsed_time: '01:00:00',
+        distance: '',
+        feeling: '',
+        notes: '',
+        avg_heart_rate: '',
+        max_heart_rate: '',
+        total_ascent: '',
+        calories: '',
+        cadence: '',
+        avg_power: '',
+        strokes: '',
+        fit_file: null,
+        is_planned: false,
+        gear: []
+      });
+    }
+  }, [editWorkout, selectedDate]);
 
   useEffect(() => {
     gearAPI.getAll()
@@ -80,7 +146,12 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
     payload.append('sport_specific_data', JSON.stringify(specific));
 
     try {
-      await activityAPI.create(payload);
+      if (editWorkout) {
+        await activityAPI.update(editWorkout.id, payload);
+        if (onClearEdit) onClearEdit();
+      } else {
+        await activityAPI.create(payload);
+      }
       setFormData({ ...formData, distance: '', notes: '', feeling: '', fit_file: null, is_planned: false, gear: [] });
       if (onWorkoutAdded) onWorkoutAdded();
     } catch (err) { alert("Error al guardar"); } finally { setLoading(false); }
@@ -90,7 +161,7 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
 
   return (
     <div className="glass-panel animate-fade-in">
-      <h2 className={styles.title}>{formData.is_planned ? 'Planificar' : 'Registrar'} Actividad</h2>
+      <h2 className={styles.title}>{editWorkout ? 'Editar' : (formData.is_planned ? 'Planificar' : 'Registrar')} Actividad</h2>
       <form onSubmit={handleSubmit}>
         <div className={styles.planningContainer}>
           <input
@@ -118,13 +189,13 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
         </div>
 
         <div className={styles.formRow}>
-          <div className={`input-group ${styles.inputGroupFlex}`}><label>Fecha</label><input type="date" name="date" value={formData.date} onChange={handleChange} required /></div>
-          <div className={`input-group ${styles.inputGroupFlex}`}><label>Hora</label><input type="time" name="time" value={formData.time} onChange={handleChange} required /></div>
+          <div className={`input-group ${styles.inputGroupFlex}`}><label>Fecha</label><input type="date" name="date" value={formData.date} onChange={handleChange} required={!formData.fit_file} /></div>
+          <div className={`input-group ${styles.inputGroupFlex}`}><label>Hora</label><input type="time" name="time" value={formData.time} onChange={handleChange} required={!formData.fit_file} /></div>
         </div>
 
         <div className={styles.formRowNoMargin}>
-          <div className={`input-group ${styles.inputGroupFlex}`}><label>Duración</label><input type="text" name="elapsed_time" value={formData.elapsed_time} onChange={handleChange} required /></div>
-          <div className={`input-group ${styles.inputGroupFlex}`}><label>Distancia {isKm ? '(km)' : '(m)'}</label><input type="number" step="0.01" name="distance" value={formData.distance} onChange={handleChange} required /></div>
+          <div className={`input-group ${styles.inputGroupFlex}`}><label>Duración</label><input type="text" name="elapsed_time" value={formData.elapsed_time} onChange={handleChange} required={!formData.fit_file} /></div>
+          <div className={`input-group ${styles.inputGroupFlex}`}><label>Distancia {isKm ? '(km)' : '(m)'}</label><input type="number" step="0.01" name="distance" value={formData.distance} onChange={handleChange} required={!formData.fit_file} /></div>
         </div>
 
         {!formData.is_planned && (
@@ -179,12 +250,49 @@ export const WorkoutLog = ({ onWorkoutAdded, selectedDate }) => {
         </div>
 
         <div className="input-group"><label>Notas</label><input type="text" name="notes" value={formData.notes} onChange={handleChange} /></div>
-        <div className="input-group"><label>Archivo .FIT</label><input type="file" accept=".fit" onChange={(e) => setFormData({ ...formData, fit_file: e.target.files[0] })} className={styles.fitInput} /></div>
+        <div className="input-group">
+          <label>Importar Archivo .FIT (Opcional)</label>
+          <div 
+            className={`${styles.dropzone} ${dragActive ? styles.dragActive : ''} ${formData.fit_file ? styles.hasFile : ''}`}
+            onDragEnter={handleDrag}
+            onDragOver={handleDrag}
+            onDragLeave={handleDrag}
+            onDrop={handleDrop}
+            onClick={() => document.getElementById('fit-file-input').click()}
+          >
+            <input 
+              type="file" 
+              id="fit-file-input"
+              accept=".fit" 
+              style={{ display: 'none' }}
+              onChange={(e) => setFormData({ ...formData, fit_file: e.target.files[0] })} 
+            />
+            {formData.fit_file ? (
+              <div className={styles.dropzoneContent}>
+                <Sparkles size={20} color="#10b981" />
+                <span className={styles.dropzoneText}>¡Archivo cargado con éxito!</span>
+                <span className={styles.fileName}>{formData.fit_file.name}</span>
+              </div>
+            ) : (
+              <div className={styles.dropzoneContent}>
+                <UploadCloud size={20} />
+                <span className={styles.dropzoneText}>Arrastra tu archivo .FIT aquí o haz clic para subir</span>
+              </div>
+            )}
+          </div>
+        </div>
 
-        <button type="submit" disabled={loading} className={styles.submitButton}>
-          {formData.is_planned ? <CalendarClock size={20} /> : <Save size={20} />}
-          {loading ? 'Guardando...' : (formData.is_planned ? 'Agendar' : 'Guardar')}
-        </button>
+        <div className={editWorkout ? styles.buttonGroup : ''}>
+          <button type="submit" disabled={loading} className={styles.submitButton}>
+            {formData.is_planned ? <CalendarClock size={20} /> : <Save size={20} />}
+            {loading ? 'Guardando...' : (editWorkout ? 'Guardar Cambios' : (formData.is_planned ? 'Agendar' : 'Guardar'))}
+          </button>
+          {editWorkout && (
+            <button type="button" onClick={onClearEdit} className={`secondary ${styles.cancelButton}`}>
+              Cancelar
+            </button>
+          )}
+        </div>
 
       </form>
     </div>

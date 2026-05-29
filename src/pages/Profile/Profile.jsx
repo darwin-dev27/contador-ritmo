@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { authAPI, activityAPI, raceAPI } from '../../services/api';
 import { User, Trophy, Award, Clock, Waves, Bike, Footprints, Settings, ShieldAlert, LogOut } from 'lucide-react';
+import { PerformanceCharts } from '../../components/PerformanceCharts/PerformanceCharts.jsx';
 import styles from './Profile.module.css';
 
 export const Profile = () => {
@@ -303,6 +304,9 @@ export const Profile = () => {
             </div>
           </div>
         </div>
+
+        {/* Gráficas e Historial de Rendimiento */}
+        <PerformanceCharts globalStats={stats} />
 
         {/* Acciones */}
         <div className={`glass-panel ${styles.card} ${styles.actionsCard}`}>

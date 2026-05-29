@@ -84,10 +84,11 @@ export const activityAPI = {
     return res.json();
   },
   update: async (id, data) => {
+    const isFormData = data instanceof FormData;
     const res = await fetch(`${API_URL}/activities/${id}/`, {
       method: 'PUT',
-      headers: getHeaders(),
-      body: JSON.stringify(data)
+      headers: getHeaders(null, !isFormData),
+      body: isFormData ? data : JSON.stringify(data)
     });
     if (!res.ok) throw new Error('Falló al actualizar');
     return res.json();
@@ -102,6 +103,11 @@ export const activityAPI = {
   getStats: async () => {
     const res = await fetch(`${API_URL}/activities/stats/`, { headers: getHeaders() });
     if (!res.ok) throw new Error('Falló al obtener estadísticas globales');
+    return res.json();
+  },
+  getMonthlyStats: async () => {
+    const res = await fetch(`${API_URL}/activities/stats/monthly/`, { headers: getHeaders() });
+    if (!res.ok) throw new Error('Falló al obtener estadísticas mensuales');
     return res.json();
   }
 };

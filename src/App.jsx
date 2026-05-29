@@ -7,6 +7,7 @@ import { Register } from './pages/Register/Register.jsx';
 import { Material } from './pages/Material/Material.jsx';
 import { Races } from './pages/Races/Races.jsx';
 import { Profile } from './pages/Profile/Profile.jsx';
+import { Home } from './pages/Home/Home.jsx';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute.jsx';
 import { AuthProvider } from './context/AuthContext';
 import styles from './App.module.css';
@@ -19,11 +20,13 @@ function App() {
         
         <main className={styles.main}>
           <Routes>
+            {/* Rutas Públicas */}
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             
             {/* Rutas Privadas */}
-            <Route path="/" element={
+            <Route path="/diary" element={
               <ProtectedRoute>
                 <Diary />
               </ProtectedRoute>
